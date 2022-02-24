@@ -39,7 +39,7 @@ ID: 903952802
     ADD EAX, -127     ;(any two negative numbers summing < -128)
     ```
 
-5. (3.9.2-13) Declarea string variablexcontaining the word “TEST” repeated 500 times.
+5. (3.9.2-13) Declare a string variable x containing the word “TEST” repeated 500 times.
 
     ```c
     x BYTE 500 DUP(“TEST”)
@@ -90,24 +90,28 @@ Truth Table
         -00001000 = -8
     ```
 
-8. (4.10-5)Write a program that compiles anduses a loop to calculate the first seven values, Fib(1) to Fib(7),of the Fibonacci number sequence described by the following formula: Fib(1) = 1, Fib(2)=1, Fib(n)=Fib(n-1)+Fib(n-2).
+8. (4.10-5)Write a program that compiles and uses a loop to calculate the first seven values, Fib(1) to Fib(7),of the Fibonacci number sequence described by the following formula: Fib(1) = 1, Fib(2)=1, Fib(n)=Fib(n-1)+Fib(n-2).
 
     ```c
         INCLUDE Irvine32.inc
-        .data
-        FIB BYTE8DUP(?)
-        .code
+
+    .data
+        FIB BYTE 8 DUP(?)
+
+    .code
         main PROC
         mov [FIB + TYPE FIB],1
         mov [FIB + 2 * TYPE FIB],1
         mov ecx,5
         mov esi,3
-        next:
+
+    next:
         mov al, [FIB + esi - TYPE FIB]
         add al, [FIB + esi - 2 * TYPE FIB]
         mov [FIB + esi], al
         add esi, TYPE FIB
         loop next
+
         main ENDP
         END main
     ```
