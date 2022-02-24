@@ -1,6 +1,6 @@
 
 <span style="float: left;">CSE 3120</span><center>Midterm Preparation<span style="float: right;">Fall 2020</span></center>
-</br
+</br>
 Name: Grant Butler </br>
 ID: 903952802
 
@@ -21,7 +21,7 @@ ID: 903952802
     PUSH EAX
 
     or
-    
+
     ADD [ESP], 3    ; (not allowed)
     ```
 
