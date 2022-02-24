@@ -1,5 +1,5 @@
 # file hello_world.S
-.p2align        4, 0x90
+.p2align        4, 0x90         # 16 byte alignment, filled nops
 
 .globl _start
 _start:
@@ -15,7 +15,8 @@ _start:
     mov $60, %rax
     xor %edi, %edi
     syscall
+
 L_format:
-.asciz "%s"
+    .asciz "%s"
 L_HW:
-.asciz "Hello World!\n"
+    .asciz "Hello World!\n"
