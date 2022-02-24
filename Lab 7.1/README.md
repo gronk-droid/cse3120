@@ -16,17 +16,17 @@ At the end of this lab you should upload the all deliverables in one .docx file 
 ssh on code01.fit.edu using PUTTY ssh. Change directory to your cse3120 folder. Compile and run the file using the instructions in the slides. Submit a snapshot of its execution result, and the source file.
 
  
-
 2. Write in Visual Studio MASM assembly a program L07_01_sqrt.asm with a square_root proc equivalent to the following C function implementing integer square_root (in assembly, parameter and result are placed in eax, and all other registers are left as received):
-
+```
 int square_root_proc(int a) {
  int i = 0;
  for(i=0; ; i++)
    if (i*i == a)
     return i;
 }
+```
 The code in MASM assembly will be something like:
-
+```
 ; File: L07_01_sqrt.asm
 ; Florida Tech, CSE3120
 ; Instructor: Marius Silaghi
@@ -51,13 +51,10 @@ main proc
   exit
 main endp
 end main
+```
 Note: if you really want to use "loop" in your implementation (which is not needed), you need to prepare ecx accordingly!
 
 Run the code and submit a snapshot of it being debugged and outputting the right value when getting out of the procedure. Insert the code in your submission.
-
- 
-
- 
 
 3. Translate the above procedure in AT&T syntax assembly, placing the procedure in a file "L07_01_sqrt.S". Make sure your implementation does not use variables, but only registers.
 
@@ -66,7 +63,7 @@ To do this, replace the .... dots in the following template (WITHOUT MODIFYING A
 Also, the order of operands (source destination) changes in AT&T syntax when
 
 compared to Intel syntax, and line comments start with #.
-
+```
 # File: L07_01_sqrt.S
 # Florida Tech, CSE3120
 # Instructor: Marius Silaghi
@@ -85,22 +82,20 @@ main:
  mov %eax, %ebx # exit code
  mov $1, %eax # exit syscall
 int $0x80
+```
 
 Test that it compiles with 'as', and upload the snapshot of the compilation result. If you encounter compilation issues, most likely you forgot to place a symbol $ in front of a constant, a % to a register, or a size qualifier after an instruction.
 
+```
 as -o sqrt.o --32 L07_01_sqrt.S
 ld -o sqrt -m elf_i386  -e main sqrt.o
 ./sqrt; echo $?
+```
+
 Should output 2. If it does not output the right result, (until we study to use a Linux-based the debugger next time) most likely you forgot to swap parameters source <-> destination at some instruction. One may also debug
 
 - by printing intermediary values using the int80 system call seen at Task 1.
 
 - by exiting at debugged points with the tested value in the ebx
 
- 
-
 Insert this code in your submission.
-
- 
-
- 
