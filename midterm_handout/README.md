@@ -28,15 +28,15 @@ ID: 903952802
 3. (4.9.2-10)Write a sequence of instructions that set both the Carry and the Overflow flags at the same time.
 
     ```c
-    MOV EAX, -128
-    ADD EAX,-1     ;(any two negative numbers summing < -128)
+    MOV AL, -128
+    ADD AL,-1     ;(any two negative numbers summing < -128)
     ```
 
 4. (4.9.2-4)Write a code using byte operands that adds two negative integers and causes the Overflow flag to be set.
 
     ```c
-    MOV EAX,-2
-    ADD EAX, -127     ;(any two negative numbers summing < -128)
+    MOV AL,-2
+    ADD AL, -127     ;(any two negative numbers summing < -128)
     ```
 
 5. (3.9.2-13) Declare a string variable x containing the word “TEST” repeated 500 times.
