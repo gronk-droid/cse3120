@@ -2,7 +2,6 @@
 ; This program demonstrates the use of local variables.
 INCLUDE Irvine32.inc
 .data
-
 .code
 main PROC
     call    MySub

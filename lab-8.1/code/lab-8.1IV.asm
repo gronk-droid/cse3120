@@ -14,11 +14,11 @@ Y_local EQU DWORD PTR [ebp-8]
 MySub PROC
     ; push    ebp
     ; mov    ebp,esp
-    ; sub    esp,8        ; create variables
-    enter 8, 0              ; two double words instead of regular prefix
-    mov    X_local,20    ; X
-    mov    Y_local,10    ; Y
-    ; mov    esp,ebp        ; remove locals from stack
+    ; sub    esp,8              ; create variables
+    enter 8, 0                  ; two double words instead of regular prefix
+    mov    X_local,20           ; X
+    mov    Y_local,10           ; Y
+    ; mov    esp,ebp            ; remove locals from stack
     ; pop    ebp
     leave
     ret
@@ -32,10 +32,10 @@ END main
 MySub PROC
     push    ebp
     mov    ebp,esp
-    sub    esp,8                ; create variables
-    mov    DWORD PTR [ebp-4],20    ; X
-    mov    DWORD PTR [ebp-8],10    ; Y
-    mov    esp,ebp                ; remove locals from stack
+    sub    esp,8                    ; create variables
+    mov    DWORD PTR [ebp-4],20     ; X
+    mov    DWORD PTR [ebp-8],10     ; Y
+    mov    esp,ebp                  ; remove locals from stack
     pop    ebp
     ret
 MySub ENDP
