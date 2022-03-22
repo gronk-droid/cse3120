@@ -6,44 +6,44 @@ Submit all your answers in a .docx file, as well as in separate files.
 1. Take the model Project.sln Download [Project.sln](https://fit.instructure.com/courses/596910/files/44703771/download?wrap=1) (original when the site worked it was: [Project.sln](http://asmirvine.com/gettingStartedVS2017/Project32_VS2017.zip)) proposed by the Irvine book, and replace its current code with the code in the file Irvine\ch08\32bit\AddTwo.asm,  (Section 8.2.3) after deleting the unused procedures (Example_x, AddTwo_x):
 
 ```
-    ; Demonstrate the AddTwo Procedure     (AddTwo.asm)
-    ; Demonstrates different procedure call protocols.
-    INCLUDE Irvine32.inc
+; Demonstrate the AddTwo Procedure     (AddTwo.asm)
+; Demonstrates different procedure call protocols.
+INCLUDE Irvine32.inc
 
-    .data
-    word1 WORD 1234h
-    word2 WORD 4111h
+.data
+word1 WORD 1234h
+word2 WORD 4111h
 
-    .code
-    main PROC
+.code
+main PROC
 
-        ;call    Example1
-        ;call    Example2
+    ;call    Example1
+    ;call    Example2
 
-        movzx    eax,word1
-        push    eax
-        movzx    eax,word2
-        push    eax
-        call    AddTwo
-        call    DumpRegs
+    movzx    eax,word1
+    push    eax
+    movzx    eax,word2
+    push    eax
+    call    AddTwo
+    call    DumpRegs
 
-        exit
+    exit
 
-    main ENDP
+main ENDP
 
-    AddTwo PROC
-    ; Adds two integers, returns sum in EAX.
-    ; The RET instruction cleans up the stack.
+AddTwo PROC
+; Adds two integers, returns sum in EAX.
+; The RET instruction cleans up the stack.
 
-        push ebp
-        mov  ebp,esp
-        mov  eax,[ebp + 12]       ; first parameter
-        add  eax,[ebp + 8]        ; second parameter
-        pop  ebp
-        ret  8                ; clean up the stack
-    AddTwo ENDP
+    push ebp
+    mov  ebp,esp
+    mov  eax,[ebp + 12]       ; first parameter
+    add  eax,[ebp + 8]        ; second parameter
+    pop  ebp
+    ret  8                ; clean up the stack
+AddTwo ENDP
 
-    END main
+END main
 ```
 Modify it by removing INCLUDE Irvine32.inc, and instead replacing it with your own .inc:
 ```
@@ -53,10 +53,10 @@ INCLUDE AddTwo.inc
 Create AddTwo.inc adding an empty file to the project, and placing in it the usual 32 bit header:
 
 ```
-    .386
-    .model flat,stdcall
-    .stack 4096
-    ExitProcess PROTO, dwExitCode:DWORD
+.386
+.model flat,stdcall
+.stack 4096
+ExitProcess PROTO, dwExitCode:DWORD
 ```
 
 The AddTwo.inc file should further set the option proc:private (see Section 8.5.1), adding appropriate comments
