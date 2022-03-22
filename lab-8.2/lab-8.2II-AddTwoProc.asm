@@ -1,5 +1,6 @@
 INCLUDE AddTwo.inc
 
+.code
 AddTwo PROC
 ; Adds two integers, returns sum in EAX.
 ; The RET instruction cleans up the stack.
