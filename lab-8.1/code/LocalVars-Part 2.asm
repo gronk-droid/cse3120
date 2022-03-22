@@ -8,16 +8,22 @@ main PROC
     exit
 main ENDP
 
+
 X_local EQU DWORD PTR [ebp-4]
 Y_local EQU DWORD PTR [ebp-8]
 
 MySub PROC
+    ; Remove
     ; push    ebp
     ; mov    ebp,esp
     ; sub    esp,8        ; create variables
-    enter 8, 0 ; two double words
+    
+    
+    enter 8, 0 ; 8  for two double words
     mov    X_local,20    ; X
     mov    Y_local,10    ; Y
+    
+    ; Remove
     ; mov    esp,ebp        ; remove locals from stack
     ; pop    ebp
     leave

@@ -16,12 +16,18 @@ main ENDP
 ;Y_local EQU DWORD PTR [ebp-8]
 
 MySub PROC
-    LOCAL X_local:DWORD, Y_local:DWORD
+    LOCAL X_local:DWORD, Y_local:DWORD ; For Lab Part 1
+    
+    ; Remove
     ;push    ebp
     ;mov    ebp,esp
     ;sub    esp,8        ; create variables
+    
+    ; Original
     mov    X_local,20    ; X
     mov    Y_local,10    ; Y
+   
+    ; Remove
     ;mov    esp,ebp        ; remove locals from stack
     ;pop    ebp
     ret
