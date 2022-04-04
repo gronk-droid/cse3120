@@ -1,7 +1,7 @@
 INCLUDE Irvine32.inc
 
 .data
-random_string BYTE 40 DUP(?), 0
+random_string BYTE 41 DUP(?), 0
 
 string_size DWORD ?
 
@@ -10,12 +10,15 @@ intro_slide BYTE "Written by Tyler Zars and Grant Butler", 10,
 
 size_selection_string BYTE "Choose the difficulty (1-40 letters): ", 0
 
+
+get_input_string BYTE "Enter the above characters: ", 0
+
 game_title BYTE "The Ultimate Typing Test",0
+
+user_input_string BYTE 40 DUP(?)
 
 .code
     main PROC
-
-        
         ; Print Start Info
         mov edx, offset intro_slide
         call WriteString
@@ -51,10 +54,46 @@ game_title BYTE "The Ultimate Typing Test",0
             ; add the newline to the end
             mov random_string[edx], 0Ah
 
-        ; printing for testing
-        mov edx, offset random_string
+        ; Print the random word out
+        mov edx, OFFSET random_string
         call WriteString
 
+
+        ; USER INPUT
+        mov edx, OFFSET get_input_string
+        call WriteString
+
+        ; get user input
+        mov  edx, OFFSET user_input_string
+        mov  ecx, string_size
+        call ReadString
+
+        mov ebx, 0 ; our looping value
+        check_if_correct_loop:
+            
+            xor al, al ; set it to 0
+            
+            ; move for comparison and do the comparison between words
+            mov al, user_input_string[ebx]
+            cmp al, random_string[ebx]
+            je correct_letter
+            jne wrong_letter
+
+            ; If wrong do something
+            wrong_letter:
+                mov edx, OFFSET game_title
+                call WriteString
+
+            ; If right do something
+            correct_letter:
+                mov edx, OFFSET get_input_string
+                call WriteString
+            
+            ; Loop if needed
+            inc ebx
+            cmp ebx, string_size
+            jb check_if_correct_loop
+        
 
         ; wait before exit
         call WaitMsg
