@@ -127,6 +127,7 @@ ms_conversion REAL4 0.001
 
         ; set timer to 0
         mov timer, 0
+        ret
     startTimer ENDP
 
     ; record end tick and set timer to time
@@ -146,7 +147,7 @@ ms_conversion REAL4 0.001
         fstp DWORD PTR [seconds]        ; store as REAL4 in seconds
 
         mov timer_running, FALSE
-
+        ret
     endTimer ENDP
 
 END main
