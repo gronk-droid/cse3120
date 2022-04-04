@@ -26,16 +26,16 @@ ms_conversion REAL4 0.001
 
 .code
     main PROC
-        ; Print Start Info
+         ; Print Start Info
         mov edx, offset intro_slide
         call WriteString
 
         ; wait (seconds x 1000) and clear everything
-        INVOKE Sleep, 5000
-        call Clrscr
+        INVOKE Sleep, 1000
+        call Clrscr 
 
         ; Set console title name
-        INVOKE SetConsoleTitle, ADDR game_title
+        INVOKE SetConsoleTitle, ADDR game_title 
 
         ; Get user input for number of chars
         mov edx, offset size_selection_string
@@ -54,10 +54,10 @@ ms_conversion REAL4 0.001
             inc edx
 
             cmp edx, string_size ; THIS VALUE DECIDES WHAT HOW MANY CHARS WE GET
-
+	        
             ; jump while we are below, this allows us to add one extra space at the end of the newline
             jb make_random_string
-
+            
             ; add the newline to the end
             mov random_string[edx], 0Ah
 
@@ -77,30 +77,69 @@ ms_conversion REAL4 0.001
 
         mov ebx, 0 ; our looping value
         check_if_correct_loop:
-
-            xor al, al ; set it to 0
-
+            
             ; move for comparison and do the comparison between words
             mov al, user_input_string[ebx]
             cmp al, random_string[ebx]
-            je correct_letter
+
             jne wrong_letter
+            je correct_letter
+            
 
             ; If wrong do something
             wrong_letter:
-                mov edx, OFFSET game_title
-                call WriteString
+               ; Line up to the correct character
+                mov  dl, bl  ;column
+
+                mov al, LENGTHOF get_input_string
+                sub al, 1
+                
+                add dl, al
+                mov  dh, 2  ;row
+                call Gotoxy
+
+                ; set our new text color
+                mov  eax, yellow + (red * 16)
+                call SetTextColor
+
+                ; write the corresponding char in the new color
+                mov  al,user_input_string[ebx]
+                call WriteChar
+
+                ; reset the color
+                mov  eax, white + (black * 16)
+                call SetTextColor
 
             ; If right do something
             correct_letter:
-                mov edx, OFFSET get_input_string
-                call WriteString
+                ; Line up to the correct character
+                mov  dl, bl  ;column
 
+                mov al, LENGTHOF get_input_string
+                sub al, 1
+                
+                add dl, al
+                mov  dh, 2  ;row
+                call Gotoxy
+
+                ; set our new text color
+                mov  eax, yellow + (green *16)
+                call SetTextColor
+
+                ; write the corresponding char in the new color
+                mov  al,user_input_string[ebx]
+                call WriteChar
+
+                ; reset the color
+                mov  eax, white + (black*16)
+                call SetTextColor
+            
             ; Loop if needed
             inc ebx
             cmp ebx, string_size
             jb check_if_correct_loop
-
+        
+        call Crlf
 
         ; wait before exit
         call WaitMsg
