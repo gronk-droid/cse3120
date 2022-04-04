@@ -131,10 +131,10 @@ ms_conversion REAL4 0.001
     endTimer PROC
         ; get ending time of program
         call GetTickCount
-        mov elapsed_time, eax
 
         ; (end - start) = elapsed time in ms
-        sub elapsed_time, start_tick
+        sub eax, start_tick
+        mov elapsed_time, eax
 
         ; ms →  s = (t ms)*0.001
         finit                           ; initialize floating point processor
