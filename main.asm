@@ -124,9 +124,6 @@ ms_conversion REAL4 0.001
         ; set starting tick
         call GetTickCount
         mov start_tick, eax
-
-        ; set timer to 0
-        mov timer, 0
         ret
     startTimer ENDP
 
@@ -145,8 +142,6 @@ ms_conversion REAL4 0.001
         fld DWORD PTR [ms_conversion]   ; push conversion onto stack
         fmul                            ; multiply
         fstp DWORD PTR [seconds]        ; store as REAL4 in seconds
-
-        mov timer_running, FALSE
         ret
     endTimer ENDP
 
