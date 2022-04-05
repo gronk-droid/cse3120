@@ -15,7 +15,7 @@ get_input_string BYTE "Enter the above characters: ", 0
 
 game_title BYTE "The Ultimate Typing Test",0
 
-user_input_string BYTE 40 DUP(?)
+user_input_string BYTE 41 DUP(?)
 
 start_tick DWORD ?
 elapsed_time DWORD ?
@@ -25,8 +25,8 @@ timer_string BYTE ?
 ms_conversion REAL4 0.001
 
 .code
-    main PROC
-         ; Print Start Info
+    main PROC        
+        ; Print Start Info
         mov edx, offset intro_slide
         call WriteString
 
@@ -65,8 +65,7 @@ ms_conversion REAL4 0.001
         mov edx, OFFSET random_string
         call WriteString
 
-
-        ; USER INPUT
+        ; Put user input prompt on screen
         mov edx, OFFSET get_input_string
         call WriteString
 
@@ -85,41 +84,42 @@ ms_conversion REAL4 0.001
             jne wrong_letter
             je correct_letter
             
-
             ; If wrong do something
             wrong_letter:
                ; Line up to the correct character
-                mov  dl, bl  ;column
+                mov  dl, bl  ; column
 
                 mov al, LENGTHOF get_input_string
                 sub al, 1
                 
                 add dl, al
-                mov  dh, 2  ;row
+                mov dh, 2  ; row
                 call Gotoxy
 
                 ; set our new text color
-                mov  eax, yellow + (red * 16)
+                mov  eax, white + (red * 16)
                 call SetTextColor
 
                 ; write the corresponding char in the new color
-                mov  al,user_input_string[ebx]
+                mov  al, user_input_string[ebx]
                 call WriteChar
 
                 ; reset the color
                 mov  eax, white + (black * 16)
                 call SetTextColor
+                
+                jmp end_loop
 
             ; If right do something
             correct_letter:
                 ; Line up to the correct character
-                mov  dl, bl  ;column
+                mov  dl, bl  ; column
 
                 mov al, LENGTHOF get_input_string
                 sub al, 1
                 
                 add dl, al
-                mov  dh, 2  ;row
+                mov dh, 2  ;row
                 call Gotoxy
 
                 ; set our new text color
@@ -127,17 +127,20 @@ ms_conversion REAL4 0.001
                 call SetTextColor
 
                 ; write the corresponding char in the new color
-                mov  al,user_input_string[ebx]
+                mov  al, user_input_string[ebx]
                 call WriteChar
 
                 ; reset the color
                 mov  eax, white + (black*16)
                 call SetTextColor
-            
-            ; Loop if needed
-            inc ebx
-            cmp ebx, string_size
-            jb check_if_correct_loop
+                
+                jmp end_loop
+
+            end_loop:
+                ; Loop if needed
+                inc ebx
+                cmp ebx, string_size
+                jb check_if_correct_loop
         
         call Crlf
 
