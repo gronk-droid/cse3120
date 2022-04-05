@@ -30,6 +30,9 @@ ms_conversion REAL4 0.001
         mov edx, offset intro_slide
         call WriteString
 
+        ; Reset the random seed for a new string each run!
+        call Randomize
+
         ; wait (seconds x 1000) and clear everything
         INVOKE Sleep, 1000
         call Clrscr 
