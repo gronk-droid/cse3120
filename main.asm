@@ -25,7 +25,7 @@ timer_string BYTE ?
 ms_conversion REAL4 0.001
 
 .code
-    main PROC        
+    main PROC
         ; Print Start Info
         mov edx, offset intro_slide
         call WriteString
@@ -35,10 +35,10 @@ ms_conversion REAL4 0.001
 
         ; wait (seconds x 1000) and clear everything
         INVOKE Sleep, 1000
-        call Clrscr 
+        call Clrscr
 
         ; Set console title name
-        INVOKE SetConsoleTitle, ADDR game_title 
+        INVOKE SetConsoleTitle, ADDR game_title
 
         ; Get user input for number of chars
         mov edx, offset size_selection_string
@@ -57,10 +57,10 @@ ms_conversion REAL4 0.001
             inc edx
 
             cmp edx, string_size ; THIS VALUE DECIDES WHAT HOW MANY CHARS WE GET
-	        
+
             ; jump while we are below, this allows us to add one extra space at the end of the newline
             jb make_random_string
-            
+
             ; add the newline to the end
             mov random_string[edx], 0Ah
 
@@ -71,6 +71,14 @@ ms_conversion REAL4 0.001
         ; Put user input prompt on screen
         mov edx, OFFSET get_input_string
         call WriteString
+
+        ; small countdown to let them know the timer will start
+        mov eax, 3
+        countdown:
+            call WriteInt
+            dec eax
+            call Crlf
+            jnz countdown
 
         ; get user input
         mov  edx, OFFSET user_input_string
@@ -86,7 +94,7 @@ ms_conversion REAL4 0.001
 
             jne wrong_letter
             je correct_letter
-            
+
             ; If wrong do something
             wrong_letter:
                ; Line up to the correct character
@@ -94,7 +102,7 @@ ms_conversion REAL4 0.001
 
                 mov al, LENGTHOF get_input_string
                 sub al, 1
-                
+
                 add dl, al
                 mov dh, 2  ; row
                 call Gotoxy
@@ -110,7 +118,7 @@ ms_conversion REAL4 0.001
                 ; reset the color
                 mov  eax, white + (black * 16)
                 call SetTextColor
-                
+
                 jmp end_loop
 
             ; If right do something
@@ -120,7 +128,8 @@ ms_conversion REAL4 0.001
 
                 mov al, LENGTHOF get_input_string
                 sub al, 1
-                
+
+                ; TODO: fix row
                 add dl, al
                 mov dh, 2  ;row
                 call Gotoxy
@@ -136,7 +145,7 @@ ms_conversion REAL4 0.001
                 ; reset the color
                 mov  eax, white + (black*16)
                 call SetTextColor
-                
+
                 jmp end_loop
 
             end_loop:
@@ -144,7 +153,7 @@ ms_conversion REAL4 0.001
                 inc ebx
                 cmp ebx, string_size
                 jb check_if_correct_loop
-        
+
         call Crlf
 
         ; wait before exit
@@ -164,7 +173,7 @@ ms_conversion REAL4 0.001
 	    ret
     GenerateReandomChar ENDP
 
-    ; records the starting tick of the typing test and sets timer to 0
+    ; records the starting tick of the typing test
     startTimer PROC
         ; set starting tick
         call GetTickCount
@@ -172,7 +181,7 @@ ms_conversion REAL4 0.001
         ret
     startTimer ENDP
 
-    ; record end tick and set timer to time
+    ; record end tick, evaluate elapsed time and convert to sec
     endTimer PROC
         ; get ending time of program
         call GetTickCount
@@ -182,11 +191,11 @@ ms_conversion REAL4 0.001
         mov elapsed_time, eax
 
         ; ms →  s = (t ms)*0.001
-        finit                           ; initialize floating point processor
-        fld DWORD PTR [elapsed_time]    ; push elapsed_time onto stack
-        fld DWORD PTR [ms_conversion]   ; push conversion onto stack
+        finit                           ; initialize
+        fld DWORD PTR [elapsed_time]    ; push onto stack
+        fld DWORD PTR [ms_conversion]   ; push onto stack
         fmul                            ; multiply
-        fstp DWORD PTR [seconds]        ; store as REAL4 in seconds
+        fstp DWORD PTR [seconds]        ; store REAL4 in seconds
         ret
     endTimer ENDP
 
