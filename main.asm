@@ -72,11 +72,11 @@ ms_conversion REAL4 0.001
         ; get user input
         mov  edx, OFFSET user_input_string
         mov  ecx, string_size
+        inc ecx ; Add one more for the null char
         call ReadString
 
         mov ebx, 0 ; our looping value
         check_if_correct_loop:
-            
             ; move for comparison and do the comparison between words
             mov al, user_input_string[ebx]
             cmp al, random_string[ebx]
