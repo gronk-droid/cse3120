@@ -17,6 +17,14 @@ game_title BYTE "The Ultimate Typing Test",0
 
 user_input_string BYTE 41 DUP(?)
 
+
+; Play again vars
+play_again_prompt BYTE "Do you want to play again (Y = Yes, N = No)? ", 10, 0
+user_play_again BYTE 5 DUP(?)
+
+thanks_for_playing BYTE "Thanks for playing!!", 10, 0
+
+; Time Vars
 start_tick DWORD ?
 elapsed_time DWORD ?
 seconds REAL4 ?
@@ -30,147 +38,175 @@ ms_conversion REAL4 0.001
         mov edx, offset intro_slide
         call WriteString
 
-        ; Reset the random seed for a new string each run!
-        call Randomize
-
-        ; wait (seconds x 1000) and clear everything
-        INVOKE Sleep, 1000
-        call Clrscr
-
         ; Set console title name
-        INVOKE SetConsoleTitle, ADDR game_title
+        INVOKE SetConsoleTitle, ADDR game_title 
 
-        ; Get user input for number of chars
-        mov edx, offset size_selection_string
-        call WriteString
-        call readInt
-        mov string_size, eax
+        main_game_loop:
+            ; Reset the random seed for a new string each run!
+            call Randomize
+
+            ; wait (seconds x 1000) and clear everything
+            INVOKE Sleep, 1000
+            call Clrscr 
+
+            ; Get user input for number of chars
+            mov edx, offset size_selection_string
+            call WriteString
+            call readInt
+            mov string_size, eax
 
 
-        mov edx, 0 ; our looping value
-        make_random_string:
-            ; get a random char
-	        call GenerateReandomChar
-	        ; add it to the string
-            mov random_string[edx], al
-	        ; move edx to the next location
-            inc edx
+            mov edx, 0 ; our looping value
+            make_random_string:
+                ; get a random char
+	            call GenerateReandomChar
+	            ; add it to the string
+                mov random_string[edx], al
+	            ; move edx to the next location
+                inc edx
 
-            cmp edx, string_size ; THIS VALUE DECIDES WHAT HOW MANY CHARS WE GET
+                cmp edx, string_size ; THIS VALUE DECIDES WHAT HOW MANY CHARS WE GET
+	        
+                ; jump while we are below, this allows us to add one extra space at the end of the newline
+                jb make_random_string
+            
+                ; add the newline to the end
+                mov random_string[edx], 0Ah
 
-            ; jump while we are below, this allows us to add one extra space at the end of the newline
-            jb make_random_string
+            ; Print the random word out
+            mov edx, OFFSET random_string
+            call WriteString
 
-            ; add the newline to the end
-            mov random_string[edx], 0Ah
+            ; Put user input prompt on screen
+            mov edx, OFFSET get_input_string
+            call WriteString
 
-        ; Print the random word out
-        mov edx, OFFSET random_string
-        call WriteString
+            ; get user input
+            mov  edx, OFFSET user_input_string
+            mov  ecx, string_size
+            inc ecx ; Add one more for the null char
+            call ReadString
 
-        ; Put user input prompt on screen
-        mov edx, OFFSET get_input_string
-        call WriteString
+            mov ebx, 0 ; our looping value
+            check_if_correct_loop:
+                ; move for comparison and do the comparison between words
+                mov al, user_input_string[ebx]
+                cmp al, random_string[ebx]
 
-        ; small countdown to let them know the timer will start
-        mov eax, 3
-        countdown:
-            call WriteInt
-            dec eax
+                jne wrong_letter
+                je correct_letter
+            
+                ; If wrong do something
+                wrong_letter:
+                   ; Line up to the correct character
+                    mov  dl, bl  ; column
+
+                    mov al, LENGTHOF get_input_string
+                    sub al, 1
+                
+                    add dl, al
+                    mov dh, 2  ; row
+                    call Gotoxy
+
+                    ; set our new text color
+                    mov  eax, white + (red * 16)
+                    call SetTextColor
+
+                    ; write the corresponding char in the new color
+                    mov  al, user_input_string[ebx]
+                    call WriteChar
+
+                    ; reset the color
+                    mov  eax, white + (black * 16)
+                    call SetTextColor
+                
+                    jmp end_loop
+
+                ; If right do something
+                correct_letter:
+                    ; Line up to the correct character
+                    mov  dl, bl  ; column
+
+                    mov al, LENGTHOF get_input_string
+                    sub al, 1
+                
+                    add dl, al
+                    mov dh, 2  ;row
+                    call Gotoxy
+
+                    ; set our new text color
+                    mov  eax, yellow + (green *16)
+                    call SetTextColor
+
+                    ; write the corresponding char in the new color
+                    mov  al, user_input_string[ebx]
+                    call WriteChar
+
+                    ; reset the color
+                    mov  eax, white + (black*16)
+                    call SetTextColor
+                
+                    jmp end_loop
+
+                end_loop:
+                    ; Loop if needed
+                    inc ebx
+                    cmp ebx, string_size
+                    jb check_if_correct_loop
+        
             call Crlf
-            jnz countdown
 
-        ; get user input
-        mov  edx, OFFSET user_input_string
-        mov  ecx, string_size
-        inc ecx ; Add one more for the null char
-        call ReadString
+            ; Loop game!!!!
+            ; Put user input prompt on screen
+            mov edx, OFFSET play_again_prompt
+            call WriteString
 
-        mov ebx, 0 ; our looping value
-        check_if_correct_loop:
-            ; move for comparison and do the comparison between words
-            mov al, user_input_string[ebx]
-            cmp al, random_string[ebx]
+            ; get user input
+            mov  edx, OFFSET user_play_again
+            mov  ecx, 1
+            inc ecx ; Add one more for the null char
+            call ReadString
 
-            jne wrong_letter
-            je correct_letter
+            mov al, user_play_again[0]
+            cmp al, "Y"
+            je main_game_loop
 
-            ; If wrong do something
-            wrong_letter:
-               ; Line up to the correct character
-                mov  dl, bl  ; column
-
-                mov al, LENGTHOF get_input_string
-                sub al, 1
-
-                add dl, al
-                mov dh, 2  ; row
-                call Gotoxy
-
-                ; set our new text color
-                mov  eax, white + (red * 16)
-                call SetTextColor
-
-                ; write the corresponding char in the new color
-                mov  al, user_input_string[ebx]
-                call WriteChar
-
-                ; reset the color
-                mov  eax, white + (black * 16)
-                call SetTextColor
-
-                jmp end_loop
-
-            ; If right do something
-            correct_letter:
-                ; Line up to the correct character
-                mov  dl, bl  ; column
-
-                mov al, LENGTHOF get_input_string
-                sub al, 1
-
-                ; TODO: fix row
-                add dl, al
-                mov dh, 2  ;row
-                call Gotoxy
-
-                ; set our new text color
-                mov  eax, yellow + (green *16)
-                call SetTextColor
-
-                ; write the corresponding char in the new color
-                mov  al, user_input_string[ebx]
-                call WriteChar
-
-                ; reset the color
-                mov  eax, white + (black*16)
-                call SetTextColor
-
-                jmp end_loop
-
-            end_loop:
-                ; Loop if needed
-                inc ebx
-                cmp ebx, string_size
-                jb check_if_correct_loop
-
-        call Crlf
-
-        ; wait before exit
-        call WaitMsg
+        ; Thanks for playing
+        mov edx, OFFSET thanks_for_playing
+        call WriteString
         exit
     main ENDP
 
     GenerateReandomChar PROC
         ; This proc returns AL with a random uppercase letter
 
-        ; start in lowercase and get a random in the range
+        ; Choose a random letter
         mov eax, 26
         call RandomRange
 
-        ; make it uppercase
-        add eax, 65
-	    ret
+        ; Move to ebx for storage
+        mov ebx, eax
+
+        ; Generate a random number and compare to choose upper/lower case
+        mov eax, 2
+        call RandomRange
+        cmp eax, 1
+        je uppercase_letter ; 1 = uppercase
+        jne lowercase_letter 
+
+        uppercase_letter:
+            ; make it uppercase
+            add ebx, 65
+            jmp finish_GenerateReandomChar
+        
+        lowercase_letter:
+            ; make it lowercase
+            add ebx, 97
+            jmp finish_GenerateReandomChar
+
+        finish_GenerateReandomChar:
+            mov eax, ebx ; send it back in al properly
+	        ret
     GenerateReandomChar ENDP
 
     ; records the starting tick of the typing test
