@@ -8,8 +8,21 @@ string_size DWORD ?
 intro_slide BYTE "Written by Tyler Zars and Grant Butler", 10,
                  "For CSE3210 Contest #1", 10 ,0
 
-size_selection_string BYTE "Choose the difficulty (1-40 letters): ", 0
+instruction_string BYTE "Hi! Welcome to the Ultimate Typing Test!", 10,
+                        "This test will give you a random string of letters,", \
+                        "both upper and lowercase for you to type.", 10,
+                        "You will be prompted for the number of letters to enter", \
+                        "and then a countdown will begin.", 10, 0
 
+instruction_string_2 BYTE "After 1, the screen will change to reveal the word",
+                          "and you can begin typing it.", 10,
+                          "Type the letters, wrong letters are fine",
+                          "and will be shown after completion!", 10,
+                          "Good luck and get those typing skills up!!!!", 10, 0
+
+random_word_header BYTE "Random String: ", 0
+
+size_selection_string BYTE "Choose the difficulty (1-40 letters): ", 0
 
 get_input_string BYTE "Enter the above characters: ", 0
 
@@ -17,19 +30,16 @@ game_title BYTE "The Ultimate Typing Test",0
 
 user_input_string BYTE 41 DUP(?)
 
-
 ; Play again vars
 play_again_prompt BYTE "Do you want to play again (Y = Yes, N = No)? ", 10, 0
 user_play_again BYTE 5 DUP(?)
 
 thanks_for_playing BYTE "Thanks for playing!!", 10, 0
 
-; Time Vars
 start_tick DWORD ?
 elapsed_time DWORD ?
 seconds REAL4 ?
 timer_string BYTE ?
-
 ms_conversion REAL4 0.001
 
 .code
@@ -40,6 +50,22 @@ ms_conversion REAL4 0.001
 
         ; Set console title name
         INVOKE SetConsoleTitle, ADDR game_title 
+
+        ; wait (seconds x 1000) and clear everything
+        INVOKE Sleep, 1000
+        call Clrscr 
+
+        ; Print Gameplay Info
+        mov edx, offset instruction_string
+        call WriteString
+
+        mov edx, offset instruction_string_2
+        call WriteString
+
+        ; wait (seconds x 1000) and clear everything
+        INVOKE Sleep, 7000
+        call Clrscr 
+
 
         main_game_loop:
             ; Reset the random seed for a new string each run!
@@ -73,8 +99,22 @@ ms_conversion REAL4 0.001
                 ; add the newline to the end
                 mov random_string[edx], 0Ah
 
+            ; small countdown to let them know the timer will start
+            mov eax, 3
+            countdown:
+                call WriteInt
+                dec eax
+                call Crlf
+                push eax
+                INVOKE Sleep, 1000 ; uses EAX so we put it on the stack for keeping
+                pop eax
+                cmp eax, 0
+                jne countdown
+
             ; Print the random word out
-            mov edx, OFFSET random_string
+            mov edx, OFFSET random_word_header ; print the header
+            call WriteString
+            mov edx, OFFSET random_string ; print the actual string
             call WriteString
 
             ; Put user input prompt on screen
@@ -105,7 +145,7 @@ ms_conversion REAL4 0.001
                     sub al, 1
                 
                     add dl, al
-                    mov dh, 2  ; row
+                    mov dh, 5  ; row
                     call Gotoxy
 
                     ; set our new text color
@@ -131,7 +171,7 @@ ms_conversion REAL4 0.001
                     sub al, 1
                 
                     add dl, al
-                    mov dh, 2  ;row
+                    mov dh, 5  ;row
                     call Gotoxy
 
                     ; set our new text color
@@ -161,7 +201,7 @@ ms_conversion REAL4 0.001
             mov edx, OFFSET play_again_prompt
             call WriteString
 
-            ; get user input
+            ; get user input for looping
             mov  edx, OFFSET user_play_again
             mov  ecx, 1
             inc ecx ; Add one more for the null char
@@ -226,7 +266,7 @@ ms_conversion REAL4 0.001
         sub eax, start_tick
         mov elapsed_time, eax
 
-        ; ms →  s = (t ms)*0.001
+        ; ms ->  s = (t ms)*0.001
         finit                           ; initialize
         fld DWORD PTR [elapsed_time]    ; push onto stack
         fld DWORD PTR [ms_conversion]   ; push onto stack
