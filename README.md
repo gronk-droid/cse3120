@@ -1,6 +1,9 @@
-# CSE3120 - Contest 1
+# CSE3120 - Contest 1 (Spring 2022)
 Grant Butler | [gbutler2020@my.fit.edu](mailto:gbutler2020@my.fit.edu)</br>Tyler Zars &nbsp;&nbsp;&nbsp; | [tzars2019@my.fit.edu](mailto:tzars2019@my.fit.edu)
 
+A typing test game that generates random upper and lower case letters in a random fashion to test your typing skill. This code was written in MASM and compiled in Visual Studio with the Irvine Library. 
+
+### If you end up here during a plagarism check, this is where we compiled and did our version control. 
 - - -
 
 A programming contest, with demo in class. You can program any game/task of your choice. You can program in teams of 2 students. Each team gets 4 minutes to demo its program.
