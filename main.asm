@@ -1,3 +1,6 @@
+; Written by Tyler Zars & Grant Butler
+; CSE3210 Contest #1
+
 INCLUDE Irvine32.inc
 
 .data
@@ -28,11 +31,11 @@ get_input_string BYTE "Enter the above characters: ", 0
 
 game_title BYTE "The Ultimate Typing Test",0
 
-user_input_string BYTE 41 DUP(?)
+user_input_string BYTE 41 DUP(?), 0
 
 ; Play again vars
-play_again_prompt BYTE "Do you want to play again (Y = Yes, N = No)? ", 10, 0
-user_play_again BYTE 5 DUP(?)
+play_again_prompt BYTE "Do you want to play again (Y = Yes (capital), N = No)? ", 10, 0
+user_play_again BYTE 5 DUP(?), 0
 
 thanks_for_playing BYTE "Thanks for playing!!", 10, 0
 
@@ -56,14 +59,23 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
         mov edx, offset instruction_string_2
         call WriteString
 
-        ; Wait (seconds x 1000) and clear everything
+        ; Wait (seconds x 1000) [clear is done in game loop]
         INVOKE Sleep, 7000
-        call Clrscr 
-
 
         main_game_loop:
             ; Reset the random seed for a new string each run!
             call Randomize
+
+            ; Reset word
+            mov ebx, 0
+            reset_word:
+                mov random_string[ebx], 0
+                inc ebx
+                cmp ebx, string_size
+                jle reset_word
+            
+            ; Reset string size
+            mov string_size, 000000000h
 
             ; Wait (seconds x 1000) and clear everything
             INVOKE Sleep, 1000
@@ -139,7 +151,7 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
                     mov  dl, bl  ; column
 
                     mov al, LENGTHOF get_input_string
-                    sub al, 1
+                    sub al, 1 ; remove null char
                 
                     add dl, al
                     mov dh, 5  ; row
@@ -165,10 +177,10 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
                     mov  dl, bl  ; column
 
                     mov al, LENGTHOF get_input_string
-                    sub al, 1
+                    sub al, 1 ; remove null char
                 
                     add dl, al
-                    mov dh, 5  ;row
+                    mov dh, 5  ; row
                     call Gotoxy
 
                     ; set our new text color
