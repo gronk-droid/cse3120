@@ -66,12 +66,12 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
             ; Reset the random seed for a new string each run!
             call Randomize
 
-            ; Reset word
+            ; Reset word (40 is the max size so we clear it all)
             mov ebx, 0
             reset_word:
                 mov random_string[ebx], 0
                 inc ebx
-                cmp ebx, string_size
+                cmp ebx, 40
                 jle reset_word
             
             ; Reset string size
