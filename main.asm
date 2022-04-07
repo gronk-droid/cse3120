@@ -36,12 +36,6 @@ user_play_again BYTE 5 DUP(?)
 
 thanks_for_playing BYTE "Thanks for playing!!", 10, 0
 
-start_tick DWORD ?
-elapsed_time DWORD ?
-seconds REAL4 ?
-timer_string BYTE ?
-ms_conversion REAL4 0.001
-
 .code
     main PROC
         ; Print Start Info
@@ -62,7 +56,7 @@ ms_conversion REAL4 0.001
         mov edx, offset instruction_string_2
         call WriteString
 
-        ; wait (seconds x 1000) and clear everything
+        ; Wait (seconds x 1000) and clear everything
         INVOKE Sleep, 7000
         call Clrscr 
 
@@ -71,7 +65,7 @@ ms_conversion REAL4 0.001
             ; Reset the random seed for a new string each run!
             call Randomize
 
-            ; wait (seconds x 1000) and clear everything
+            ; Wait (seconds x 1000) and clear everything
             INVOKE Sleep, 1000
             call Clrscr 
 
@@ -86,12 +80,15 @@ ms_conversion REAL4 0.001
             make_random_string:
                 ; get a random char
 	            call GenerateReandomChar
-	            ; add it to the string
+	            
+                ; add it to the string
                 mov random_string[edx], al
-	            ; move edx to the next location
+	            
+                ; move edx to the next location
                 inc edx
-
-                cmp edx, string_size ; THIS VALUE DECIDES WHAT HOW MANY CHARS WE GET
+                
+                ; string_size decides number of chars
+                cmp edx, string_size
 	        
                 ; jump while we are below, this allows us to add one extra space at the end of the newline
                 jb make_random_string
@@ -99,7 +96,7 @@ ms_conversion REAL4 0.001
                 ; add the newline to the end
                 mov random_string[edx], 0Ah
 
-            ; small countdown to let them know the timer will start
+            ; Small countdown to kick off the game
             mov eax, 3
             countdown:
                 call WriteInt
@@ -136,7 +133,7 @@ ms_conversion REAL4 0.001
                 jne wrong_letter
                 je correct_letter
             
-                ; If wrong do something
+                ; If wrong, change background color to red
                 wrong_letter:
                    ; Line up to the correct character
                     mov  dl, bl  ; column
@@ -162,7 +159,7 @@ ms_conversion REAL4 0.001
                 
                     jmp end_loop
 
-                ; If right do something
+                ; If right, change background color to green
                 correct_letter:
                     ; Line up to the correct character
                     mov  dl, bl  ; column
@@ -248,31 +245,4 @@ ms_conversion REAL4 0.001
             mov eax, ebx ; send it back in al properly
 	        ret
     GenerateReandomChar ENDP
-
-    ; records the starting tick of the typing test
-    startTimer PROC
-        ; set starting tick
-        call GetTickCount
-        mov start_tick, eax
-        ret
-    startTimer ENDP
-
-    ; record end tick, evaluate elapsed time and convert to sec
-    endTimer PROC
-        ; get ending time of program
-        call GetTickCount
-
-        ; (end - start) = elapsed time in ms
-        sub eax, start_tick
-        mov elapsed_time, eax
-
-        ; ms ->  s = (t ms)*0.001
-        finit                           ; initialize
-        fld DWORD PTR [elapsed_time]    ; push onto stack
-        fld DWORD PTR [ms_conversion]   ; push onto stack
-        fmul                            ; multiply
-        fstp DWORD PTR [seconds]        ; store REAL4 in seconds
-        ret
-    endTimer ENDP
-
 END main
