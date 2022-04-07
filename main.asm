@@ -1,4 +1,4 @@
-; Written by Tyler Zars & Grant Butler
+; Written by Tyler Zars (tzars2019@my.fit.edu) & Grant Butler (gbutler2020@my.fit.edu)
 ; CSE3210 Contest #1
 
 INCLUDE Irvine32.inc
@@ -33,8 +33,8 @@ game_title BYTE "The Ultimate Typing Test",0
 
 user_input_string BYTE 41 DUP(?), 0
 
-; Play again vars
 play_again_prompt BYTE "Do you want to play again (Y = Yes (capital), N = No)? ", 10, 0
+
 user_play_again BYTE 5 DUP(?), 0
 
 thanks_for_playing BYTE "Thanks for playing!!", 10, 0
