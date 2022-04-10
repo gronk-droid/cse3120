@@ -46,11 +46,11 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
         call WriteString
 
         ; Set console title name
-        INVOKE SetConsoleTitle, ADDR game_title 
+        INVOKE SetConsoleTitle, ADDR game_title
 
         ; wait (seconds x 1000) and clear everything
         INVOKE Sleep, 1000
-        call Clrscr 
+        call Clrscr
 
         ; Print Gameplay Info
         mov edx, offset instruction_string
@@ -73,13 +73,13 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
                 inc ebx
                 cmp ebx, 40
                 jle reset_word
-            
+
             ; Reset string size
             mov string_size, 000000000h
 
             ; Wait (seconds x 1000) and clear everything
             INVOKE Sleep, 1000
-            call Clrscr 
+            call Clrscr
 
             ; Get user input for number of chars
             mov edx, offset size_selection_string
@@ -92,19 +92,19 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
             make_random_string:
                 ; get a random char
 	            call GenerateReandomChar
-	            
+
                 ; add it to the string
                 mov random_string[edx], al
-	            
+
                 ; move edx to the next location
                 inc edx
-                
+
                 ; string_size decides number of chars
                 cmp edx, string_size
-	        
+
                 ; jump while we are below, this allows us to add one extra space at the end of the newline
                 jb make_random_string
-            
+
                 ; add the newline to the end
                 mov random_string[edx], 0Ah
 
@@ -144,7 +144,7 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
 
                 jne wrong_letter
                 je correct_letter
-            
+
                 ; If wrong, change background color to red
                 wrong_letter:
                    ; Line up to the correct character
@@ -152,7 +152,7 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
 
                     mov al, LENGTHOF get_input_string
                     sub al, 1 ; remove null char
-                
+
                     add dl, al
                     mov dh, 5  ; row
                     call Gotoxy
@@ -168,7 +168,7 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
                     ; reset the color
                     mov  eax, white + (black * 16)
                     call SetTextColor
-                
+
                     jmp end_loop
 
                 ; If right, change background color to green
@@ -178,7 +178,7 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
 
                     mov al, LENGTHOF get_input_string
                     sub al, 1 ; remove null char
-                
+
                     add dl, al
                     mov dh, 5  ; row
                     call Gotoxy
@@ -194,7 +194,7 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
                     ; reset the color
                     mov  eax, white + (black*16)
                     call SetTextColor
-                
+
                     jmp end_loop
 
                 end_loop:
@@ -202,7 +202,7 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
                     inc ebx
                     cmp ebx, string_size
                     jb check_if_correct_loop
-        
+
             call Crlf
 
             ; Loop game!!!!
@@ -241,13 +241,13 @@ thanks_for_playing BYTE "Thanks for playing!!", 10, 0
         call RandomRange
         cmp eax, 1
         je uppercase_letter ; 1 = uppercase
-        jne lowercase_letter 
+        jne lowercase_letter
 
         uppercase_letter:
             ; make it uppercase
             add ebx, 65
             jmp finish_GenerateReandomChar
-        
+
         lowercase_letter:
             ; make it lowercase
             add ebx, 97
