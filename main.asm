@@ -40,7 +40,14 @@ user_play_again BYTE 5 DUP(?), 0
 thanks_for_playing BYTE "Thanks for playing!!", 10, 0
 
 correct_number_string BYTE "Number of correct letters typed: ", 0
+
 incorrect_number_string BYTE "Number of incorrect letters typed: ", 0
+
+start_seconds DWORD ?
+
+end_seconds DWORD ?
+
+seconds_display_string BYTE "Milliseconds to write the random string: ", 0
 
 .code
     main PROC
@@ -124,7 +131,7 @@ incorrect_number_string BYTE "Number of incorrect letters typed: ", 0
                 INVOKE Sleep, 1000 ; uses EAX so we put it on the stack for keeping
                 pop eax
                 cmp eax, 0
-                jne countdown
+                jne countdown   
 
             ; Print the random word out
             mov edx, OFFSET random_word_header ; print the header
@@ -136,11 +143,19 @@ incorrect_number_string BYTE "Number of incorrect letters typed: ", 0
             mov edx, OFFSET get_input_string
             call WriteString
 
+            ; Save current time for total time
+            call GetMseconds
+            mov  start_seconds, eax  
+
             ; get user input
             mov  edx, OFFSET user_input_string
             mov  ecx, string_size
             inc ecx ; Add one more for the null char
             call ReadString
+
+            ; Save current time for total time
+            call GetMseconds
+            mov  end_seconds, eax
 
             mov ebx, 0 ; our looping value
             check_if_correct_loop:
@@ -233,6 +248,18 @@ incorrect_number_string BYTE "Number of incorrect letters typed: ", 0
             mov eax, string_size
             sub ax, bp
             call WriteInt
+            pop eax
+
+            call Crlf
+
+            ; Print user time to write the string
+            mov edx, OFFSET seconds_display_string
+            call WriteString
+            
+            push eax
+            mov eax, end_seconds
+            sub eax, start_seconds
+            call WriteDec
             pop eax
 
             call Crlf
