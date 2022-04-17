@@ -143,7 +143,7 @@ seconds_display_string BYTE "Milliseconds to write the random string: ", 0
             mov edx, OFFSET get_input_string
             call WriteString
 
-            ; Save current time for total time
+            ; Save starting time for total time
             call GetMseconds
             mov  start_seconds, eax  
 
@@ -153,7 +153,7 @@ seconds_display_string BYTE "Milliseconds to write the random string: ", 0
             inc ecx ; Add one more for the null char
             call ReadString
 
-            ; Save current time for total time
+            ; Save ending time for total time
             call GetMseconds
             mov  end_seconds, eax
 
