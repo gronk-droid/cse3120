@@ -1,0 +1,3 @@
+[submodule "contest"]
+	path = contest
+	url = https://github.com/gronk-droid/cse3120contest.git
