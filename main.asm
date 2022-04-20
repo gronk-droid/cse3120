@@ -23,6 +23,8 @@ instruction_string_2 BYTE "After 1, the screen will change to reveal the word",
                           "and will be shown after completion!", 10,
                           "Good luck and get those typing skills up!!!!", 10, 0
 
+instruction_confirm_string BYTE "Hit any key to continue!", 0
+
 random_word_header BYTE "Random String: ", 0
 
 size_selection_string BYTE "Choose the difficulty (1-40 letters): ", 0
@@ -69,8 +71,15 @@ seconds_display_string BYTE "Milliseconds to write the random string: ", 0
         mov edx, offset instruction_string_2
         call WriteString
 
-        ; Wait (seconds x 1000) [clear is done in game loop]
-        INVOKE Sleep, 7000
+        call Crlf
+
+        ; Print instructions to continue
+        mov edx, offset instruction_confirm_string
+        call WriteString
+        
+        wait_for_key:
+            call ReadKey         ; look for keyboard input
+            jz wait_for_key      ; jump until a key is pressed
 
         main_game_loop:
             ; Reset the random seed for a new string each run!
@@ -104,7 +113,7 @@ seconds_display_string BYTE "Milliseconds to write the random string: ", 0
             mov edx, 0 ; our looping value
             make_random_string:
                 ; get a random char
-	            call GenerateReandomChar
+	            call GenerateReandomLetter
 	            
                 ; add it to the string
                 mov random_string[edx], al
@@ -143,7 +152,7 @@ seconds_display_string BYTE "Milliseconds to write the random string: ", 0
             mov edx, OFFSET get_input_string
             call WriteString
 
-            ; Save starting time for total time
+            ; Save current time for total time
             call GetMseconds
             mov  start_seconds, eax  
 
@@ -153,7 +162,7 @@ seconds_display_string BYTE "Milliseconds to write the random string: ", 0
             inc ecx ; Add one more for the null char
             call ReadString
 
-            ; Save ending time for total time
+            ; Save current time for total time
             call GetMseconds
             mov  end_seconds, eax
 
@@ -285,8 +294,8 @@ seconds_display_string BYTE "Milliseconds to write the random string: ", 0
         exit
     main ENDP
 
-    GenerateReandomChar PROC
-        ; This proc returns AL with a random uppercase letter
+    GenerateReandomLetter PROC
+        ; This proc returns AL with a random upper/lower case letter
 
         ; Choose a random letter
         mov eax, 26
@@ -305,15 +314,31 @@ seconds_display_string BYTE "Milliseconds to write the random string: ", 0
         uppercase_letter:
             ; make it uppercase
             add ebx, 65
-            jmp finish_GenerateReandomChar
+            jmp finish_GenerateReandomLetter
         
         lowercase_letter:
             ; make it lowercase
             add ebx, 97
-            jmp finish_GenerateReandomChar
+            jmp finish_GenerateReandomLetter
 
-        finish_GenerateReandomChar:
+        finish_GenerateReandomLetter:
             mov eax, ebx ; send it back in al properly
 	        ret
+    GenerateReandomLetter ENDP
+
+    GenerateReandomChar PROC
+    ; This proc returns AL with a random chararacter
+
+    ; Choose a random char
+    mov eax, 103
+    call RandomRange
+
+    ; Move to ebx for storage
+    mov ebx, eax
+
+    ; Generate a random number and compare to choose upper/lower case
+    add ebx, 33
+    mov eax, ebx ; send it back in al properly
+    ret
     GenerateReandomChar ENDP
 END main
