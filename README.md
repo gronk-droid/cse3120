@@ -1,28 +1,6 @@
-# CSE3120 - Contest 1 (Spring 2022)
-Grant Butler | [gbutler2020@my.fit.edu](mailto:gbutler2020@my.fit.edu)</br>Tyler Zars &nbsp;&nbsp;&nbsp; | [tzars2019@my.fit.edu](mailto:tzars2019@my.fit.edu)
+# Assignments for CSE3120 at Florida Tech
+These are labs and projects generated from the Kip Irvine library and book to fufill Computer Architecture and Assembly Programming. 
 
-A typing test game that generates random upper and lower case letters in a random fashion to test your typing skill. This code was written in MASM and compiled in Visual Studio with the Irvine Library. 
-
-### If you end up here during a plagarism check, this is where we compiled and did our version control. 
-- - -
-
-A programming contest, with demo in class. You can program any game/task of your choice. You can program in teams of 2 students. Each team gets 4 minutes to demo its program.
-
-See a previous semester 2 rounds examples at:
-
-[https://drive.google.com/file/d/1KPaywAiKlKI5UdDRdF-GDkwlpFba6URz/view?usp=sharing](https://drive.google.com/file/d/1KPaywAiKlKI5UdDRdF-GDkwlpFba6URz/view?usp=sharing)</br>
-[https://drive.google.com/file/d/1lpLekPA9IGr8qWGfGBxefv5GsiBzvl6O/view?usp=sharing](https://drive.google.com/file/d/1lpLekPA9IGr8qWGfGBxefv5GsiBzvl6O/view?usp=sharing)
-
-You can use only assembly and Irvine's libraries. Complexity does not have to be high, even if it is appreciated.
-
-The class votes on projects. Top demos get significant bonus points. Upload sources. Colleagues will peer-review anonymously for plagiarism. Plagiarism is addressed according to the FIT standard procedures (0 in assignment,...).
-
-Students get bonuses for generating deep peer reviews with execution reports. For peer review (deadline Wednesday March 7), address the items:
-
-- originality (3 points)
-
-- complexity (1 point)
-
-- runs/bugs (3 points)
-
-- code comments (1 point)
+Code complete by:
+Tyler Zars   | [tzars2019@my.fit.edu](mailto:tzars2019@my.fit.edu) <br>
+Grant Butler | [gbutler2020@my.fit.edu](mailto:gbutler2020@my.fit.edu)
