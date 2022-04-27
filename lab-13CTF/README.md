@@ -163,6 +163,43 @@ make
 cp ./sock ~/
 popd
 ```
+
+```
+objdump -d sqrt.o
+```
+
+```bash
+gbutler2020@code01 code $> objdump -d sqrt.o
+
+sqrt.o:     file format elf32-i386
+
+
+Disassembly of section .text:
+
+00000000 <square_root_proc>:
+   0:   9b db e3                finit
+   3:   50                      push   %eax
+   4:   df 04 24                fild   (%esp)
+   7:   9b d9 3d 00 00 00 00    fstcw  0x0
+   e:   66 81 0d 00 00 00 00    orw    $0xc00,0x0
+  15:   00 0c
+  17:   d9 2d 00 00 00 00       fldcw  0x0
+  1d:   d9 fa                   fsqrt
+  1f:   df 1c 24                fistp  (%esp)
+  22:   58                      pop    %eax
+  23:   66 81 25 00 00 00 00    andw   $0xc00,0x0
+  2a:   00 0c
+  2c:   d9 2d 00 00 00 00       fldcw  0x0
+  32:   c3                      ret
+
+00000033 <__main>:
+  33:   b8 04 00 00 00          mov    $0x4,%eax
+  38:   e8 fc ff ff ff          call   39 <__main+0x6>
+  3d:   89 c3                   mov    %eax,%ebx
+  3f:   b8 01 00 00 00          mov    $0x1,%eax
+  44:   cd 80                   int    $0x80
+```
+
 then:
 ```bash
 ncat class-msilaghi-f1.fit.edu 2346 < ./sqrt.bin
